@@ -1,0 +1,61 @@
+<div xmlns:th="http://www.thymeleaf.org">
+    <!-- Add Item Modal -->
+    <div id="addItemModal" class="modal-backdrop">
+      <div class="modal-container" role="dialog" aria-labelledby="modalTitle" aria-modal="true">
+        <div class="modal-header">
+          <h2 id="modalTitle">Add New Item</h2>
+          <button class="modal-close" aria-label="Close modal" id="closeModal">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="addItemForm">
+            <div class="form-group required">
+              <label for="itemName">Name</label>
+              <input type="text" id="itemName" name="name" required />
+              <div class="form-error">Name is required</div>
+            </div>
+            
+            <div class="form-group required">
+              <label for="itemTombamento">Tombamento (Asset Tag)</label>
+              <input type="text" id="itemTombamento" name="tombamento" required />
+              <div class="form-error">Tombamento is required</div>
+            </div>
+            
+            <div class="form-group">
+              <label for="itemDescription">Description</label>
+              <textarea id="itemDescription" name="description" rows="3"></textarea>
+            </div>
+            
+            <div class="form-group required">
+              <label for="itemStatus">Status</label>
+              <select id="itemStatus" name="status" required>
+                <option value="AVAILABLE">Available</option>
+                <option value="IN_USE">In Use</option>
+                <option value="BROKEN">Broken</option>
+                <option value="MAINTENANCE">Maintenance</option>
+              </select>
+              <div class="form-error">Status is required</div>
+            </div>
+            
+            <!-- Success animation (hidden by default) -->
+            <div class="success-checkmark">
+              <div class="check-icon">
+                <span class="icon-line line-tip"></span>
+                <span class="icon-line line-long"></span>
+                <div class="icon-circle"></div>
+                <div class="icon-fix"></div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancelAddItem">Cancel</button>
+          <button type="button" class="btn btn-primary" id="submitAddItem">Add Item</button>
+        </div>
+      </div>
+    </div>
+</div>

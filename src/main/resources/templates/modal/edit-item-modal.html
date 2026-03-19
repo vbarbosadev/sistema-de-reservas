@@ -1,0 +1,54 @@
+<div xmlns:th="http://www.thymeleaf.org">
+    <!-- Edit Item Modal -->
+    <div id="editSingleItemModal" class="modal-backdrop" style="display: none">
+      <div class="modal-container" role="dialog" aria-labelledby="editSingleItemModalTitle" aria-modal="true">
+        <div class="modal-header">
+          <h2 id="editSingleItemModalTitle">Edit Item</h2>
+          <button class="modal-close" aria-label="Close modal" id="closeEditSingleItemModal">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="editSingleItemForm">
+            <input type="hidden" id="editSingleItemModalItemId" />
+            <input type="hidden" id="editSingleItemReservedDate" />
+            
+            <div class="form-group required">
+              <label for="editSingleItemName">Name</label>
+              <input type="text" id="editSingleItemName" name="name" required />
+              <div class="form-error">Name is required</div>
+            </div>
+            
+            <div class="form-group required">
+              <label for="editSingleItemTombamento">Tombamento (Asset Tag)</label>
+              <input type="text" id="editSingleItemTombamento" name="tombamento" required />
+              <div class="form-error">Tombamento is required</div>
+            </div>
+            
+            <div class="form-group">
+              <label for="editSingleItemDescription">Description</label>
+              <textarea id="editSingleItemDescription" name="description" rows="3"></textarea>
+            </div>
+            
+            <div class="form-group required">
+              <label for="editSingleItemStatus">Status</label>
+              <select id="editSingleItemStatus" name="status" required>
+                <option value="AVAILABLE">Available</option>
+                <option value="IN_USE">In Use</option>
+                <option value="BROKEN">Broken</option>
+                <option value="MAINTENANCE">Maintenance</option>
+              </select>
+              <div class="form-error">Status is required</div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancelEditSingleItem">Cancel</button>
+          <button type="button" class="btn btn-primary" id="submitEditSingleItem">Save Changes</button>
+        </div>
+      </div>
+    </div>
+</div>

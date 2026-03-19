@@ -1,0 +1,50 @@
+# Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# IDE - IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# IDE - VS Code
+.vscode/
+
+# IDE - Eclipse
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# Spring Boot
+spring-shell.log
+
+# Logs
+logs/
+*.log
+*.log.*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker - backups gerados pelos scripts
+scripts/backups/*.sql
+scripts/backups/*.sql.gz
+scripts/backup/*.sql
+scripts/backup/*.sql.gz
+
+# Secrets / variáveis de ambiente
+.env
+.env.local
+.env.*.local
+
+# Imagens Docker exportadas
+*.tar
+*.tar.gz

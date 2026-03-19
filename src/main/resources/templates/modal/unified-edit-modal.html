@@ -1,0 +1,185 @@
+<div xmlns:th="http://www.thymeleaf.org">
+  <!-- Unified Edit Modal -->
+  <div id="unifiedEditModal" class="modal-backdrop" style="display: none">
+    <div
+      class="modal-container"
+      role="dialog"
+      aria-labelledby="unifiedEditModalTitle"
+      aria-modal="true"
+    >
+      <div class="modal-header">
+        <h2 id="unifiedEditModalTitle">Edit</h2>
+        <button
+          class="modal-close"
+          aria-label="Close modal"
+          id="closeUnifiedEditModal"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="unifiedEditForm">
+          <input type="hidden" id="editEntityId" name="id" />
+          <input type="hidden" id="editEntityType" name="entityType" />
+
+          <!-- Item Fields -->
+          <div id="itemFieldsContainer" style="display: none">
+            <div class="form-group required">
+              <label for="editItemName">Name</label>
+              <input
+                type="text"
+                id="editItemName"
+                name="name"
+                class="form-control"
+              />
+              <div class="form-error">Name is required</div>
+            </div>
+
+            <div class="form-group required">
+              <label for="editItemTombamento">Tombamento (Asset Tag)</label>
+              <input
+                type="text"
+                id="editItemTombamento"
+                name="tombamento"
+                class="form-control"
+              />
+              <div class="form-error">Tombamento is required</div>
+            </div>
+
+            <div class="form-group">
+              <label for="editItemDescription">Description</label>
+              <textarea
+                id="editItemDescription"
+                name="description"
+                rows="3"
+                class="form-control"
+              ></textarea>
+            </div>
+
+            <div class="form-group required">
+              <label for="editItemStatus">Item Status</label>
+              <select
+                id="editItemStatus"
+                name="itemStatus"
+                class="form-control"
+              >
+                <option value="AVAILABLE">Available</option>
+                <option value="IN_USE">In Use</option>
+                <option value="BROKEN">Broken</option>
+                <option value="MAINTENANCE">Maintenance</option>
+              </select>
+            </div>
+            <input
+              type="hidden"
+              id="editItemReservedDate"
+              name="reservedDate"
+            />
+          </div>
+
+          <!-- Reserve Fields -->
+          <div id="reserveFieldsContainer" style="display: none">
+            <div class="form-group required">
+              <label for="editReserveTombamentos">Items (Tombamentos)</label>
+              <select
+                id="editReserveTombamentos"
+                name="tombamentos"
+                multiple
+                class="form-control"
+                style="height: 100px"
+              >
+                <!-- Options will be populated by JS -->
+              </select>
+              <div class="form-error">At least one item is required</div>
+              <small class="form-text"
+                >Hold Ctrl/Cmd to select multiple items.</small
+              >
+            </div>
+
+            <div class="form-group required">
+              <label for="editReserveResponsible">Responsável</label>
+              <select id="editReserveResponsible" name="responsible" class="form-control" data-user-select data-placeholder="Selecione o responsável..." required>
+                <option value="">Selecione o responsável...</option>
+              </select>
+              <div class="form-error">Responsável é obrigatório</div>
+            </div>
+
+            <div class="form-group required">
+              <label for="editReserveRequester">Solicitante</label>
+              <input
+                type="text"
+                id="editReserveRequester"
+                name="requester"
+                class="form-control"
+                data-autofill-user
+                readonly
+                style="background:#f8fafc;cursor:not-allowed;color:#334155;"
+              />
+              <div class="form-error">Solicitante é obrigatório</div>
+            </div>
+
+            <div class="form-group required">
+              <label for="editReserveDate">Reservation Date</label>
+              <input
+                type="date"
+                id="editReserveDate"
+                name="reservationDate"
+                class="form-control"
+              />
+              <div class="form-error">Reservation date is required</div>
+            </div>
+
+            <div class="form-group required">
+              <label for="editReserveStatus">Reservation Status</label>
+              <select
+                id="editReserveStatus"
+                name="reserveStatus"
+                class="form-control"
+              >
+                <option value="AGUARDANDO_ACAUTELAMENTO">Aguardando Acautelamento</option>
+                <option value="LIBERADO">Liberado</option>
+                <option value="RETIRADO">Retirado</option>
+                <option value="DEVOLVIDO">Devolvido</option>
+                <option value="CANCELADO">Cancelado</option>
+              </select>
+            </div>
+
+            <div class="form-group required">
+              <label for="editReserveStatusUpdatedByName">Atualizado por</label>
+              <input
+                type="text"
+                id="editReserveStatusUpdatedByName"
+                name="statusUpdatedByName"
+                class="form-control"
+                data-autofill-user
+                readonly
+                style="background:#f8fafc;cursor:not-allowed;color:#334155;"
+              />
+              <div class="form-error">Campo obrigatório ao alterar status</div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="cancelUnifiedEdit">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-primary" id="submitUnifiedEdit">
+          Save Changes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

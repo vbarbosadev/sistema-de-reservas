@@ -1,0 +1,41 @@
+<div xmlns:th="http://www.thymeleaf.org">
+  <!-- Login Modal (no close button - must log in) -->
+  <div id="loginModal" class="modal-backdrop login-modal-backdrop">
+    <div class="modal-container login-modal-container" role="dialog" aria-labelledby="loginModalTitle" aria-modal="true">
+      <div class="modal-header login-modal-header">
+        <div class="login-logo">
+          <div class="logo-icon" style="width:32px;height:32px;background:linear-gradient(135deg,#4f46e5,#818cf8);border-radius:8px;"></div>
+          <h2 id="loginModalTitle">Inventorio</h2>
+        </div>
+      </div>
+      <div class="modal-body">
+        <p class="login-subtitle" id="loginSubtitle">Bom dia! Selecione seu usuário para continuar.</p>
+        <form id="loginForm" autocomplete="off">
+          <div class="form-group required">
+            <label for="loginUsername">Usuário</label>
+            <!-- Options populated dynamically via login.js -->
+            <select id="loginUsername" name="username" data-user-select required>
+              <option value="">Selecione seu usuário...</option>
+            </select>
+            <div class="form-error">Selecione um usuário</div>
+          </div>
+          <div id="loginErrorMsg" class="login-error-msg" style="display:none;"></div>
+
+          <!-- Criar novo usuário -->
+          <div style="margin-top:-8px;margin-bottom:8px;">
+            <button type="button" id="loginCreateUserBtn" class="login-create-user-link">
+              + Criar novo usuário
+            </button>
+          </div>
+          <div id="loginCreateUserSection" style="display:none;" class="login-create-user-section">
+            <input type="text" id="loginCreateUserInput" placeholder="Nome do novo usuário" class="login-create-input" />
+            <button type="button" id="loginCreateUserConfirm" class="btn btn-primary" style="margin-top:0.5rem;padding:0.4rem 1rem;font-size:0.88rem;">Criar e selecionar</button>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="loginSubmitBtn" style="width:100%;">Entrar</button>
+      </div>
+    </div>
+  </div>
+</div>

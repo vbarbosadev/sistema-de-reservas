@@ -1,0 +1,129 @@
+/* Reserves Management Page Styles */
+
+.reserves-table-container {
+  display: block;
+  width: 100%;
+  margin-top: 2rem;
+  background: white;
+  border-radius: var(--border-radius, 8px);
+  box-shadow: var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.1));
+  overflow-x: auto;
+}
+
+.reserves-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.reserves-table th,
+.reserves-table td {
+  padding: 0.65rem 0.85rem;
+  border-bottom: 1px solid var(--border-color, #e2e8f0);
+  vertical-align: middle;
+}
+
+.reserves-table th {
+  background-color: var(--bg-secondary, #f8fafc);
+  font-weight: 600;
+  color: var(--text-secondary, #64748b);
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.reserves-table td {
+  font-size: 0.9rem;
+  color: var(--text-primary, #1e293b);
+}
+
+.reserves-table tbody tr:hover {
+  background-color: var(--bg-secondary, #f8fafc);
+}
+
+.reserves-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.filters-container {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+  background: white;
+  padding: 1rem;
+  border-radius: var(--border-radius, 8px);
+  box-shadow: var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.1));
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filter-group label {
+  font-weight: 500;
+  color: var(--text-secondary, #64748b);
+}
+
+.filter-group input,
+.filter-group select {
+  padding: 0.5rem;
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: var(--border-radius, 8px);
+}
+
+.action-cell {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.action-btn {
+  padding: 0.4rem 0.8rem;
+  border: none;
+  border-radius: var(--border-radius-sm, 4px);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.view-btn {
+  background-color: var(--primary-light, #e0e7ff);
+  color: var(--primary-color, #4338ca);
+}
+
+.edit-btn {
+  background-color: var(--secondary-color, #e2e8f0);
+  color: var(--text-primary, #1e293b);
+}
+
+.delete-btn {
+  background-color: #fee2e2;
+  color: #ef4444;
+}
+
+/* Modal specific styles */
+#reserveDetailsModal .modal-content {
+  max-width: 600px;
+}
+
+.detail-row {
+  display: flex;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color, #e2e8f0);
+}
+
+.detail-label {
+  font-weight: 600;
+  width: 150px;
+  color: var(--text-secondary, #64748b);
+}
+
+.detail-value {
+  flex: 1;
+  color: var(--text-primary, #1e293b);
+}

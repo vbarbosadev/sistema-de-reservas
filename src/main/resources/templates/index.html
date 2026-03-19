@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gerenciamento de Reservas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/modal.css}" />
+  </head>
+  <body>
+    <!-- Login Modal -->
+    <div th:replace="~{modal/login-modal}"></div>
+
+    <!-- Modals included as Thymeleaf fragments -->
+    <div th:replace="~{modal/add-item-modal}"></div>
+    <div th:replace="~{modal/create-reserve-modal}"></div>
+    <div th:replace="~{modal/unified-edit-modal}"></div>
+    <div th:replace="~{modal/edit-item-modal}"></div>
+
+    <div class="app-container">
+      <!-- Sidebar Navigation -->
+      <aside class="sidebar">
+        <div class="logo">
+          <div class="logo-icon"></div>
+          <h2>Inventario</h2>
+        </div>
+        <nav>
+          <ul>
+            <li class="active"><a href="#">Dashboard</a></li>
+            <li><a href="/reserves">Reservas</a></li>
+          </ul>
+        </nav>
+        <div class="sidebar-footer">
+          <button class="btn btn-primary" id="openAddItemModal">
+            + Novo Item
+          </button>
+          <button
+            class="btn btn-secondary"
+            id="openCreateReserveModal"
+            style="margin-top: 0.5rem;"
+          >
+            + Nova Reserva
+          </button>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <header class="top-header">
+          <div class="header-titles">
+            <h1>Visão Geral do Inventário</h1>
+            <p>Gerencie e acompanhe os ativos da sua empresa</p>
+          </div>
+          <div class="user-profile-wrapper">
+            <div class="user-profile" id="userProfileTrigger" title="Trocar usuário">
+              <div class="avatar" data-user-avatar>?</div>
+              <span data-user-name>...</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:#94a3b8;"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+            <div class="profile-dropdown" id="userProfileDropdown"></div>
+          </div>
+        </header>
+
+        <!-- Filters / Search -->
+        <section class="controls-section">
+          <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Buscar itens..." />
+          </div>
+          <div class="filter-chips">
+            <button class="chip active" data-filter="all">Todos</button>
+            <button class="chip status-available" data-filter="AVAILABLE">
+              Disponíveis
+            </button>
+            <button class="chip status-in-use" data-filter="LOANED">
+              Emprestados
+            </button>
+            <button class="chip status-broken" data-filter="BROKEN">
+              Quebrados
+            </button>
+            <button class="chip status-maintenance" data-filter="MAINTENANCE">
+              Em Manutenção
+            </button>
+          </div>
+        </section>
+
+        <!-- Grid of Items -->
+        <section class="item-grid" id="itemGrid">
+          <div
+            class="item-card"
+            th:each="item : ${items}"
+            th:data-status="${item.status}"
+            th:data-state="${item.state}"
+            th:data-tombamento="${item.tombamento}"
+          >
+            <div class="card-header">
+              <h3 th:text="${item.name}">Nome do Item</h3>
+
+              <span
+                class="status-badge"
+                th:classappend="${
+                  item.state.name()  == 'BROKEN'      ? 'badge-broken' :
+                  item.status.name() == 'LOANED'      ? 'badge-in-use'      :
+                  item.state.name()  == 'MAINTENANCE' ? 'badge-maintenance' :
+                  item.status.name() == 'ON_ROOM'     ? 'badge-available': ''}"
+                th:text="${item.state.name() == 'BROKEN' ? 'QUEBRADO' :
+                  item.status.name() == 'LOANED' ? 'EM USO' :
+                  item.state.name() == 'MAINTENANCE' ? 'EM MANUTENÇÃO' :
+                  item.status.name() == 'ON_ROOM' ? 'DISPONÍVEL' : ''}"
+              >
+                STATUS
+              </span>
+            </div>
+
+            <div class="card-body">
+              <p class="description" th:text="${item.description}">
+                Descrição do Item
+              </p>
+            </div>
+
+            <div class="card-body">
+              <p class="description" th:text="${'Tombamento: ' + item.tombamento}">
+                Tombamento
+              </p>
+            </div>
+
+            <!-- Reservation section -->
+            <div class="card-reservations">
+              <!-- Nearest reservation (populated by JS) -->
+              <div class="reservation-next" data-reservation-next>
+                <div class="reserved-info text-muted">
+                  <span>Carregando reservas...</span>
+                </div>
+              </div>
+              <!-- Expand toggle (hidden until there are additional reservations) -->
+              <button
+                class="btn-expand-reservations"
+                data-reservation-expand
+                style="display:none;"
+                title="Ver todas as reservas"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+                Ver outras reservas
+              </button>
+              <!-- Extra reservations list (hidden by default) -->
+              <div class="reservation-list" data-reservation-list style="display:none;"></div>
+            </div>
+
+            <div class="card-footer">
+              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <button class="action-btn edit-item-btn" th:data-id="${item.id}" style="padding: 0.25rem 0.5rem; font-size: 0.85rem;">Editar</button>
+                <button class="action-btn delete-item-btn" th:data-id="${item.id}" style="padding: 0.25rem 0.5rem; font-size: 0.85rem; color: #ef4444; border-color: #ef4444;">Excluir</button>
+              </div>
+            </div>
+          </div>
+          <!-- End Loop -->
+
+          <div th:if="${#lists.isEmpty(items)}" class="empty-state">
+            <p>Nenhum item encontrado no inventário.</p>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script th:src="@{/js/login.js}"></script>
+    <script th:src="@{/js/api-service.js}"></script>
+    <script th:src="@{/js/main.js}"></script>
+    <script th:src="@{/js/modal/add-item-modal.js}"></script>
+    <script th:src="@{/js/modal/create-reserve-modal.js}"></script>
+    <script th:src="@{/js/modal/unified-edit-modal.js}"></script>
+    <script th:src="@{/js/modal/edit-item-modal.js}"></script>
+  </body>
+</html>

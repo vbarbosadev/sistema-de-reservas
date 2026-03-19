@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gerenciamento de Reservas</title>
+    <!-- Google Fonts for Modern Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/modal.css}" />
+    <link rel="stylesheet" th:href="@{/css/reserves.css}" />
+  </head>
+  <body>
+    <!-- Login Modal -->
+    <div th:replace="~{modal/login-modal}"></div>
+
+    <!-- Modals included as Thymeleaf fragments -->
+    <div th:replace="~{modal/add-item-modal}"></div>
+    <div th:replace="~{modal/create-reserve-modal}"></div>
+    <div th:replace="~{modal/unified-edit-modal}"></div>
+    <div th:replace="~{modal/edit-reserve-modal}"></div>
+
+    <div class="app-container">
+      <!-- Sidebar Navigation -->
+      <aside class="sidebar">
+        <div class="logo">
+          <div class="logo-icon"></div>
+          <h2>Inventario</h2>
+        </div>
+        <nav>
+          <ul>
+            <li><a href="/">Dashboard</a></li>
+            <li class="active"><a href="/reserves">Reservas</a></li>
+          </ul>
+        </nav>
+        <div class="sidebar-footer">
+          <button
+            class="btn btn-primary"
+            id="openAddItemModal"
+          >
+            + Novo Item
+          </button>
+          <button
+            class="btn btn-secondary"
+            id="openCreateReserveModal"
+            style="margin-top: 0.5rem;"
+          >
+            + Nova Reserva
+          </button>
+        </div>
+        
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <header class="top-header">
+          <div class="header-titles">
+            <h1>Gerenciamento de Reservas</h1>
+            <p>Gerencie e acompanhe as reservas de equipamentos</p>
+          </div>
+          <div class="user-profile-wrapper">
+            <div class="user-profile" id="userProfileTrigger" title="Trocar usuário">
+              <div class="avatar" data-user-avatar>?</div>
+              <span data-user-name>...</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:#94a3b8;"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+            <div class="profile-dropdown" id="userProfileDropdown"></div>
+          </div>
+        </header>
+
+        <!-- Dashboard Stats / Filters -->
+        <section class="controls-section">
+          <div class="filters-container">
+            <div class="search-bar">
+              <input type="text" id="reserveSearchInput" placeholder="Buscar por tombamento, responsável..." />
+            </div>
+
+            <div class="filter-group">
+              <label for="dateRangeFilter">Período:</label>
+              <input type="date" id="dateStartFilter" />
+              <span>até</span>
+              <input type="date" id="dateEndFilter" />
+            </div>
+
+            <button class="btn btn-secondary" id="resetFiltersBtn">Limpar Filtros</button>
+          </div>
+        </section>
+
+        <!-- Grid of Reserves -->
+        <section class="item-grid reserves-table-container">
+            <table class="reserves-table" id="reservesTable">
+                <thead>
+                    <tr>
+                        <th style="width:50px;">ID</th>
+                        <th>Tombamentos</th>
+                        <th style="width:130px;">Responsável</th>
+                        <th style="width:130px;">Solicitante</th>
+                        <th style="width:100px;">Início</th>
+                        <th style="width:100px;">Fim</th>
+                        <th style="width:160px;">Status</th>
+                        <th style="width:90px;">Solicitação</th>
+                        <th style="width:180px;">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="reserve : ${reserves}"
+                        th:data-tombamentos="${reserve.items.![tombamento]}"
+                        th:data-responsible="${reserve.responsible}"
+                        th:data-requester="${reserve.requester}"
+                        th:data-date-inicio="${reserve.dataInicio}"
+                        th:data-date-fim="${reserve.dataFim}">
+                        <td th:text="${reserve.id}">ID</td>
+                        <td>
+                            <span th:each="item, iterStat : ${reserve.items}">
+                                <span th:text="${item.tombamento}"></span><span th:if="${!iterStat.last}">, </span>
+                            </span>
+                        </td>
+                        <td th:text="${reserve.responsible}">Responsável</td>
+                        <td th:text="${reserve.requester}">Solicitante</td>
+                        <td style="white-space:nowrap;font-size:0.9rem;" th:text="${#temporals.format(reserve.dataInicio, 'dd/MM/yyyy')}">Data Início</td>
+                        <td style="white-space:nowrap;font-size:0.9rem;" th:text="${#temporals.format(reserve.dataFim, 'dd/MM/yyyy')}">Data Fim</td>
+                        <td style="position:relative;">
+                            <span class="status-badge status-clickable"
+                                  th:data-id="${reserve.id}"
+                                  th:data-status="${reserve.status.name()}"
+                                  th:text="${reserve.status.name()}"
+                                  title="Clique para alterar o status"
+                                  style="cursor:pointer;">STATUS</span>
+                        </td>
+                        <td style="text-align:center;">
+                            <a th:if="${reserve.solicitacaoLink != null and !#strings.isEmpty(reserve.solicitacaoLink)}"
+                               th:attr="href=${#strings.startsWith(reserve.solicitacaoLink, 'http') ? reserve.solicitacaoLink : 'https://' + reserve.solicitacaoLink}"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               title="Ver e-mail de solicitação"
+                               style="display:inline-flex;align-items:center;gap:0.3rem;color:#3b82f6;text-decoration:none;font-size:0.85rem;font-weight:500;padding:0.25rem 0.5rem;border-radius:4px;background:#eff6ff;border:1px solid #bfdbfe;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>
+                                Ver
+                            </a>
+                            <span th:if="${reserve.solicitacaoLink == null or #strings.isEmpty(reserve.solicitacaoLink)}"
+                                  style="color:#94a3b8;font-size:0.85rem;">—</span>
+                        </td>
+                        <td class="action-cell">
+                            <button class="action-btn open-edit-reserve-btn" th:data-id="${reserve.id}">Editar</button>
+                            <button class="action-btn view-btn" th:data-id="${reserve.id}">Ver</button>
+                            <button class="action-btn delete-btn" th:data-id="${reserve.id}">Apagar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+          <!-- Empty State -->
+          <div th:if="${#lists.isEmpty(reserves)}" class="empty-state">
+            <p>Nenhuma reserva encontrada.</p>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Reserve Details Modal Component -->
+    <div id="reserveDetailsModal" class="modal-backdrop" style="display: none">
+        <div class="modal-container" role="dialog" aria-labelledby="viewReserveModalTitle" aria-modal="true">
+            <div class="modal-header">
+                <h2 id="viewReserveModalTitle">Detalhes da Reserva</h2>
+                <button class="modal-close" aria-label="Fechar modal" id="closeReserveDetailsModal">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body" id="reserveDetailsContent">
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div><strong>ID:</strong> <span id="viewReserveId"></span></div>
+                    <div><strong>Data Início:</strong> <span id="viewReserveDataInicio"></span></div>
+                    <div><strong>Data Fim:</strong> <span id="viewReserveDataFim"></span></div>
+                    <div><strong>Solicitante:</strong> <span id="viewReserveRequester"></span></div>
+                    <div><strong>Responsável:</strong> <span id="viewReserveResponsible"></span></div>
+                    <div><strong>Status:</strong> <span id="viewReserveStatus"></span></div>
+                    <div><strong>Atualizado por:</strong> <span id="viewReserveUpdatedBy"></span></div>
+                    <div>
+                        <strong>Itens:</strong>
+                        <ul id="viewReserveItemsList" style="margin-top: 5px; padding-left: 20px;"></ul>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="closeReserveDetailsBtn">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Status-change popover (rendered once, repositioned by JS) -->
+    <div id="statusPopover" style="display:none; position:fixed; z-index:9999; background:white; border:1px solid #e2e8f0; border-radius:8px; padding:1rem; box-shadow:0 8px 24px rgba(0,0,0,0.12); min-width:240px;">
+        <p style="margin:0 0 0.5rem; font-weight:600; font-size:0.9rem; color:#334155;">Alterar Status</p>
+        <select id="statusPopoverSelect" style="width:100%; padding:0.4rem 0.5rem; border:1px solid #e2e8f0; border-radius:6px; font-size:0.9rem; margin-bottom:0.5rem; background:#f8fafc;">
+            <option value="AGUARDANDO_ACAUTELAMENTO">Aguardando Acautelamento</option>
+            <option value="LIBERADO">Liberado</option>
+            <option value="RETIRADO">Retirado</option>
+            <option value="DEVOLVIDO">Devolvido</option>
+            <option value="CANCELADO">Cancelado</option>
+        </select>
+        <input type="text" id="statusPopoverName" placeholder="Atualizado por (obrigatório)" style="width:100%; padding:0.4rem 0.5rem; border:1px solid #e2e8f0; border-radius:6px; font-size:0.9rem; margin-bottom:0.5rem; box-sizing:border-box;" />
+        <div id="statusPopoverError" style="display:none; color:#e11d48; font-size:0.8rem; margin-bottom:0.4rem;"></div>
+        <div style="display:flex; gap:0.5rem;">
+            <button id="statusPopoverSave" class="btn btn-primary" style="flex:1; padding:0.4rem;">Salvar</button>
+            <button id="statusPopoverCancel" class="btn btn-secondary" style="flex:1; padding:0.4rem;">Cancelar</button>
+        </div>
+    </div>
+
+    <script th:src="@{/js/login.js}"></script>
+    <script th:src="@{/js/api-service.js}"></script>
+    <script th:src="@{/js/main.js}"></script>
+    <script th:src="@{/js/reserves.js}"></script>
+    <script th:src="@{/js/modal/add-item-modal.js}"></script>
+    <script th:src="@{/js/modal/create-reserve-modal.js}"></script>
+    <script th:src="@{/js/modal/unified-edit-modal.js}"></script>
+    <script th:src="@{/js/modal/edit-reserve-modal.js}"></script>
+    <script th:src="@{/js/status-change.js}"></script>
+  </body>
+</html>

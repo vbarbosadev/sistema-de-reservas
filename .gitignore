@@ -48,3 +48,6 @@ scripts/backup/*.sql.gz
 # Imagens Docker exportadas
 *.tar
 *.tar.gz
+
+#helpful files
+continue.md

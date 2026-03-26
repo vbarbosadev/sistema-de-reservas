@@ -49,5 +49,8 @@ scripts/backup/*.sql.gz
 *.tar
 *.tar.gz
 
+# Agents
+.claude/
+
 #helpful files
 continue.md
